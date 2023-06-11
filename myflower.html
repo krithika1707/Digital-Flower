@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiki's Multiflower</title>
+    <style>
+        body{
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    position: fixed;
+    background-color: black;
+}
+    </style>
+</head>
+<body>
+    <canvas id="cvs"></canvas>
+<script>
+    let canvas, ctx;
+
+const {sin, cos, tan, min, abs, PI} = Math;
+
+let a = 0;
+let b = 3;
+let d = 97;
+let n = 4;
+
+const color = { r: 0, g: 0, b: 0 };
+
+const animate = rad => {
+
+    const loop = () => {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.825)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const center = rad - rad * 0.5;
+        a += 0.2;
+        color.r += 0.063; color.g += 0.027; color.b += 0.0156;
+        let _r = abs(sin(color.r) * 255);
+        let _g = abs(sin(color.g) * 250);
+        let _b = abs(sin(color.b) * 255);
+        d += 0.2;
+        ctx.fillStyle = `rgb(${_r}, ${_g}, ${_b})`;
+        ctx.strokeStyle = ctx.fillStyle;
+        ctx.save();
+        ctx.translate(center, center);
+        ctx.rotate(a * PI / 180);
+        ctx.beginPath();
+        for(let i = 0; i < 361; i++) {
+            const k  = i * d * PI / 180;
+            const r = (rad * 0.4) * sin(n * k);
+            const x = cos(k) * r;
+            const y = sin(k) * r;
+            ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.stroke();
+        ctx.restore();
+        requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+}
+
+const main = () => {
+    canvas = document.getElementById("cvs");
+    ctx = canvas.getContext("2d");
+    const radius = min(innerWidth, innerHeight);
+    canvas.width = radius;
+    canvas.height = radius;
+    canvas.style.position = "absolute";
+    canvas.style.left = innerWidth * 0.5 - radius * 0.5 + "px";
+    canvas.style.top = innerHeight * 0.5 - radius * 0.5 + "px";
+    animate(radius);
+}
+
+addEventListener("load", main);
+</script>
+
+</body>
+</html>
